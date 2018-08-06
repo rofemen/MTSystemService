@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.CourseScoreMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.CourseScore" >
+    <id column="cs_id" property="csId" jdbcType="BIGINT" />
+    <result column="cs_ci_code" property="csCiCode" jdbcType="BIGINT" />
+    <result column="cs_stu_userId" property="csStuUserid" jdbcType="BIGINT" />
+    <result column="cs_score" property="csScore" jdbcType="REAL" />
+    <result column="cs_extra_1" property="csExtra1" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="extendBaseResultMap" type="com.rofe.pojo.CourseScore">
+ 	<association property="csStu" javaType="com.rofe.pojo.CourseScore" column="cs_stu_userId" select="com.rofe.dao.StudentMapper.selectById"></association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cs_id, cs_ci_code, cs_stu_userId, cs_score, cs_extra_1
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from coursescore
+    where cs_id = #{csId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from coursescore
+    where cs_id = #{csId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.CourseScore" >
+    insert into coursescore (cs_id, cs_ci_code, cs_stu_userId, 
+      cs_score, cs_extra_1)
+    values (#{csId,jdbcType=BIGINT}, #{csCiCode,jdbcType=BIGINT}, #{csStuUserid,jdbcType=BIGINT}, 
+      #{csScore,jdbcType=REAL}, #{csExtra1,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.CourseScore" >
+    insert into coursescore
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="csId != null" >
+        cs_id,
+      </if>
+      <if test="csCiCode != null" >
+        cs_ci_code,
+      </if>
+      <if test="csStuUserid != null" >
+        cs_stu_userId,
+      </if>
+      <if test="csScore != null" >
+        cs_score,
+      </if>
+      <if test="csExtra1 != null" >
+        cs_extra_1,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="csId != null" >
+        #{csId,jdbcType=BIGINT},
+      </if>
+      <if test="csCiCode != null" >
+        #{csCiCode,jdbcType=BIGINT},
+      </if>
+      <if test="csStuUserid != null" >
+        #{csStuUserid,jdbcType=BIGINT},
+      </if>
+      <if test="csScore != null" >
+        #{csScore,jdbcType=REAL},
+      </if>
+      <if test="csExtra1 != null" >
+        #{csExtra1,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.CourseScore" >
+    update coursescore
+    <set >
+      <if test="csCiCode != null" >
+        cs_ci_code = #{csCiCode,jdbcType=BIGINT},
+      </if>
+      <if test="csStuUserid != null" >
+        cs_stu_userId = #{csStuUserid,jdbcType=BIGINT},
+      </if>
+      <if test="csScore != null" >
+        cs_score = #{csScore,jdbcType=REAL},
+      </if>
+      <if test="csExtra1 != null" >
+        cs_extra_1 = #{csExtra1,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cs_id = #{csId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.CourseScore" >
+    update coursescore
+    set cs_ci_code = #{csCiCode,jdbcType=BIGINT},
+      cs_stu_userId = #{csStuUserid,jdbcType=BIGINT},
+      cs_score = #{csScore,jdbcType=REAL},
+      cs_extra_1 = #{csExtra1,jdbcType=VARCHAR}
+    where cs_id = #{csId,jdbcType=BIGINT}
+  </update>
+    <!-- 查成绩的sql
+  	select * from coursescore where cs_stu_userId in (select stu_userId  from studentinfo where stu_class in (select cl_code from classinfo where cl_army_instor = 10001))
+   -->
+   <select id = "getStudentScore" resultMap="extendBaseResultMap">
+   		select * from coursescore where cs_stu_userId in
+   		(select stu_userId  from studentinfo where stu_class in (select cl_code from classinfo where cl_army_instor = #{tcUserId,jdbcType=BIGINT}))
+   </select>
+     <!-- 录入成绩 前的检测-->
+   <select id = "operateCourseScore" resultMap="BaseResultMap">
+   	 select  <include refid="Base_Column_List" /> from coursescore where cs_stu_userId = #{stuUserId,jdbcType=BIGINT} and cs_ci_code =  #{csCiCode,jdbcType=BIGINT}
+   </select>
+  
+</mapper>

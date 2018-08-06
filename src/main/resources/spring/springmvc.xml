@@ -1,0 +1,110 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+
+	<!-- 可以扫描controller、service、...
+	这里让扫描controller，指定controller的包
+	 -->
+	<context:component-scan base-package="com.rofe.controller"></context:component-scan>
+
+ 	
+	<!-- 静态资源解析包括 ：js、css、img、..-->
+    <mvc:resources location="/static/" mapping="/static/**"/>
+	<mvc:resources location="/img/" mapping="/img/**"/>
+	<mvc:resources location="/tempExcel/" mapping="/tempExcel/**"/>
+	<mvc:resources location="/stuIcon/" mapping="/stuIcon/**"/>
+	<mvc:resources location="/tcIcon/" mapping="/tcIcon/**"/>
+	<mvc:resources location="/share/" mapping="/share/**"/>
+	<mvc:resources location="/templateExcel/" mapping="/templateExcel/**"/>
+	<mvc:resources location="/defaultIcon/" mapping="/defaultIcon/**"/>
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value><!-- 避免IE出现下载JSON文件的情况 -->
+						<value>application/json</value>
+					</list>
+					
+				</property>
+				<property name="objectMapper">
+					<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+						<!-- 处理responseBody 里面日期类型 -->
+						<property name="dateFormat">
+							<bean class="java.text.SimpleDateFormat">
+								<constructor-arg type="java.lang.String" value="yyyy-MM-dd" />
+							<!--<constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" /> -->
+							</bean>
+						</property>
+						<!-- 为null字段时不显示 -->
+						<property name="serializationInclusion">
+							<value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+
+	<!-- 视图解析器-->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 配置jsp路径的前缀 -->
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<!-- 配置jsp路径的后缀 -->
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<!-- 自定义参数绑定 
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="cn.rofe.converter.DateConverter"/>
+			</list>
+		</property>
+	</bean>
+	 -->
+    <mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="com.rofe.interceptor.AuthorityInterceptor"></bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+		<mvc:mapping path="/testController/test"/>
+        <!-- 配置自定义的文件上传类型限制拦截器 -->
+        <bean class="com.rofe.util.FileTypeInterceptor" />
+    </mvc:interceptor>
+	</mvc:interceptors>
+	
+	<!-- 控制器异常处理 
+    	<bean id="exceptionHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
+    	</bean>
+	-->
+	<!--    
+    	<bean class="com.github.zhangkaitao.shiro.chapter16.web.exception.DefaultExceptionHandler"/>
+	 -->    
+	<!-- 文件上传解析器 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="utf-8" />
+		<!-- <property name="maxUploadSize" value="10485760" /> 文件最大上限 -->
+		<!-- <property name="maxInMemorySize" value="1048576" /> 文件缓存大小 -->
+		<!-- resolveLazily属性启用是为了推迟文件解析，以便在UploadAction 中捕获文件大小异常
+		<property name="resolveLazily" value="true" />
+		 -->
+	</bean>
+    <import resource="classpath:shiro/spring-mvc-shiro.xml"/>
+</beans>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.Role" >
+    <id column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_extra_1" property="roleExtra1" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.rofe.pojo.Role" extends="BaseResultMap" >
+    <result column="role_authority" property="roleAuthority" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    role_id, role_name, role_extra_1
+  </sql>
+  <sql id="Blob_Column_List" >
+    role_authority
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from roleinfo
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from roleinfo
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.Role" >
+    insert into roleinfo (role_id, role_name, role_extra_1, 
+      role_authority)
+    values (#{roleId,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR}, #{roleExtra1,jdbcType=VARCHAR}, 
+      #{roleAuthority,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.Role" >
+    insert into roleinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="roleExtra1 != null" >
+        role_extra_1,
+      </if>
+      <if test="roleAuthority != null" >
+        role_authority,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleExtra1 != null" >
+        #{roleExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="roleAuthority != null" >
+        #{roleAuthority,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.Role" >
+    update roleinfo
+    <set >
+      <if test="roleName != null" >
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleExtra1 != null" >
+        role_extra_1 = #{roleExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="roleAuthority != null" >
+        role_authority = #{roleAuthority,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.rofe.pojo.Role" >
+    update roleinfo
+    set role_name = #{roleName,jdbcType=VARCHAR},
+      role_extra_1 = #{roleExtra1,jdbcType=VARCHAR},
+      role_authority = #{roleAuthority,jdbcType=LONGVARCHAR}
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.Role" >
+    update roleinfo
+    set role_name = #{roleName,jdbcType=VARCHAR},
+      role_extra_1 = #{roleExtra1,jdbcType=VARCHAR}
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </update>
+   <select id="getRofeInfo" resultMap="ResultMapWithBLOBs" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from roleinfo
+  </select>
+</mapper>

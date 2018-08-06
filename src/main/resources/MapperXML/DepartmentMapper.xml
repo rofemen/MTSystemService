@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.DepartmentMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.Department" >
+    <id column="di_id" property="diId" jdbcType="BIGINT" />
+    <result column="di_name" property="diName" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    di_id, di_name, company
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from departmentinfo
+    where di_id = #{diId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from departmentinfo
+    where di_id = #{diId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.Department" >
+    insert into departmentinfo (di_id, di_name, company
+      )
+    values (#{diId,jdbcType=BIGINT}, #{diName,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.Department" >
+    insert into departmentinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="diId != null" >
+        di_id,
+      </if>
+      <if test="diName != null" >
+        di_name,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="diId != null" >
+        #{diId,jdbcType=BIGINT},
+      </if>
+      <if test="diName != null" >
+        #{diName,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.Department" >
+    update departmentinfo
+    <set >
+      <if test="diName != null" >
+        di_name = #{diName,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where di_id = #{diId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.Department" >
+    update departmentinfo
+    set di_name = #{diName,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR}
+    where di_id = #{diId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllDeptInfo" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from departmentinfo
+  </select>
+  <select id="getAllDeptCount" resultType="java.lang.Integer" >
+    select count(di_id) from departmentinfo
+  </select>
+</mapper>

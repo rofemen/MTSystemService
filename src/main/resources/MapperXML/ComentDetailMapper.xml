@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.ComentDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.ComentDetail" >
+    <id column="cm_id" property="cmId" jdbcType="INTEGER" />
+    <result column="cm_share_id" property="cmShareId" jdbcType="BIGINT" />
+    <result column="cm_send_id" property="cmSendId" jdbcType="INTEGER" />
+    <result column="cm_rece_id" property="cmReceId" jdbcType="INTEGER" />
+    <result column="cm_content" property="cmContent" jdbcType="VARCHAR" />
+    <result column="cm_time" property="cmTime" jdbcType="TIMESTAMP" />
+    <result column="cm_extra_1" property="cmExtra1" jdbcType="VARCHAR" />
+    <result column="cm_extra_2" property="cmExtra2" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="extendBaseResultMap" type="com.rofe.pojo.ComentDetail">
+  	<association property="sender" javaType="com.rofe.pojo.Student" column="cm_send_id" select="com.rofe.dao.StudentMapper.selectById"></association>
+  	<association property="receer" javaType="com.rofe.pojo.Student" column="cm_rece_id" select="com.rofe.dao.StudentMapper.selectById"></association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cm_id, cm_share_id, cm_send_id, cm_rece_id, cm_content, cm_time, cm_extra_1, cm_extra_2
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from comentdetail
+    where cm_id = #{cmId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from comentdetail
+    where cm_id = #{cmId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.ComentDetail" >
+    insert into comentdetail (cm_id, cm_share_id, cm_send_id, 
+      cm_rece_id, cm_content, cm_time, 
+      cm_extra_1, cm_extra_2)
+    values (#{cmId,jdbcType=INTEGER}, #{cmShareId,jdbcType=BIGINT}, #{cmSendId,jdbcType=INTEGER}, 
+      #{cmReceId,jdbcType=INTEGER}, #{cmContent,jdbcType=VARCHAR}, #{cmTime,jdbcType=TIMESTAMP}, 
+      #{cmExtra1,jdbcType=VARCHAR}, #{cmExtra2,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.ComentDetail" >
+    insert into comentdetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cmId != null" >
+        cm_id,
+      </if>
+      <if test="cmShareId != null" >
+        cm_share_id,
+      </if>
+      <if test="cmSendId != null" >
+        cm_send_id,
+      </if>
+      <if test="cmReceId != null" >
+        cm_rece_id,
+      </if>
+      <if test="cmContent != null" >
+        cm_content,
+      </if>
+      <if test="cmTime != null" >
+        cm_time,
+      </if>
+      <if test="cmExtra1 != null" >
+        cm_extra_1,
+      </if>
+      <if test="cmExtra2 != null" >
+        cm_extra_2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cmId != null" >
+        #{cmId,jdbcType=INTEGER},
+      </if>
+      <if test="cmShareId != null" >
+        #{cmShareId,jdbcType=BIGINT},
+      </if>
+      <if test="cmSendId != null" >
+        #{cmSendId,jdbcType=INTEGER},
+      </if>
+      <if test="cmReceId != null" >
+        #{cmReceId,jdbcType=INTEGER},
+      </if>
+      <if test="cmContent != null" >
+        #{cmContent,jdbcType=VARCHAR},
+      </if>
+      <if test="cmTime != null" >
+        #{cmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cmExtra1 != null" >
+        #{cmExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="cmExtra2 != null" >
+        #{cmExtra2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.ComentDetail" >
+    update comentdetail
+    <set >
+      <if test="cmShareId != null" >
+        cm_share_id = #{cmShareId,jdbcType=BIGINT},
+      </if>
+      <if test="cmSendId != null" >
+        cm_send_id = #{cmSendId,jdbcType=INTEGER},
+      </if>
+      <if test="cmReceId != null" >
+        cm_rece_id = #{cmReceId,jdbcType=INTEGER},
+      </if>
+      <if test="cmContent != null" >
+        cm_content = #{cmContent,jdbcType=VARCHAR},
+      </if>
+      <if test="cmTime != null" >
+        cm_time = #{cmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cmExtra1 != null" >
+        cm_extra_1 = #{cmExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="cmExtra2 != null" >
+        cm_extra_2 = #{cmExtra2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cm_id = #{cmId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.ComentDetail" >
+    update comentdetail
+    set cm_share_id = #{cmShareId,jdbcType=BIGINT},
+      cm_send_id = #{cmSendId,jdbcType=INTEGER},
+      cm_rece_id = #{cmReceId,jdbcType=INTEGER},
+      cm_content = #{cmContent,jdbcType=VARCHAR},
+      cm_time = #{cmTime,jdbcType=TIMESTAMP},
+      cm_extra_1 = #{cmExtra1,jdbcType=VARCHAR},
+      cm_extra_2 = #{cmExtra2,jdbcType=VARCHAR}
+    where cm_id = #{cmId,jdbcType=INTEGER}
+  </update>
+  <select id="getCommentDetailByShareId" resultMap="extendBaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from comentdetail
+    where cm_share_id = #{cmShareId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteBySendIdOrReceId" parameterType="java.lang.Long" >
+    delete from comentdetail
+    where 
+        cm_rece_id = #{item}  or cm_send_id = #{item}
+  </delete>
+</mapper>

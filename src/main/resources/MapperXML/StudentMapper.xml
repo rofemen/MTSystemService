@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.StudentMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.Student" >
+    <id column="stu_userId" property="stuUserid" jdbcType="BIGINT" />
+    <result column="stu_username" property="stuUsername" jdbcType="VARCHAR" />
+    <result column="stu_password" property="stuPassword" jdbcType="VARCHAR" />
+    <result column="stu_pre_password" property="stuPrePassword" jdbcType="VARCHAR" />
+    <result column="stu_num" property="stuNum" jdbcType="BIGINT" />
+    <result column="stu_name" property="stuName" jdbcType="VARCHAR" />
+    <result column="stu_grade" property="stuGrade" jdbcType="INTEGER" />
+    <result column="stu_class" property="stuClass" jdbcType="BIGINT" />
+    <result column="stu_tel" property="stuTel" jdbcType="VARCHAR" />
+    <result column="stu_birthday" property="stuBirthday" jdbcType="TIMESTAMP" />
+    <result column="stu_sex" property="stuSex" jdbcType="TINYINT" />
+    <result column="stu_lock" property="stuLock" jdbcType="INTEGER" />
+    <result column="stu_firstLogin" property="stuFirstlogin" jdbcType="TINYINT" />
+    <result column="stu_extra_1" property="stuExtra1" jdbcType="VARCHAR" />
+    <result column="stu_extra_2" property="stuExtra2" jdbcType="VARCHAR" />
+    <result column="stu_extra_3" property="stuExtra3" jdbcType="VARCHAR" />
+    <result column="stu_extra_4" property="stuExtra4" jdbcType="INTEGER" />
+    <result column="stu_extra_5" property="stuExtra5" jdbcType="INTEGER" />
+    <result column="stu_finalScore" property="stuFinalscore" jdbcType="REAL" />
+    <result column="stu_instor_ei" property="stuInstorEi" jdbcType="INTEGER" />
+    <result column="stu_army_ei" property="stuArmyEi" jdbcType="INTEGER" />
+    <result column="stu_tutor_ei" property="stuTutorEi" jdbcType="INTEGER" />
+    <result column="stu_deptId" property="stuDeptid" jdbcType="BIGINT" />
+    <result column="stu_email" property="stuEmail" jdbcType="VARCHAR" />
+    <result column="stu_role" property="stuRole" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="extendBaseResultMap" type="com.rofe.pojo.Student">
+  	<association property="classInfo" javaType="com.rofe.pojo.ClassInfo" column="stu_class" select="com.rofe.dao.ClassInfoMapper.selectByPrimaryKey"></association>
+    <association property="dept" javaType="com.rofe.pojo.Department" column="stu_deptId" select="com.rofe.dao.DepartmentMapper.selectByPrimaryKey"></association>
+    <association property="role" javaType="com.rofe.pojo.Role" column="stu_role" select="com.rofe.dao.RoleMapper.selectByPrimaryKey"></association>
+  </resultMap>
+
+  <sql id="filterSensitive" >
+    stu_userId, stu_username, stu_num, stu_name, stu_grade, 
+    stu_class, stu_tel, stu_birthday, stu_sex, stu_lock, stu_firstLogin, stu_finalScore, stu_instor_ei, 
+    stu_army_ei, stu_tutor_ei, stu_deptId, stu_email, stu_role , stu_extra_1
+  </sql>
+  <sql id="Base_Column_List" >
+    stu_userId, stu_username, stu_password, stu_pre_password, stu_num, stu_name, stu_grade, 
+    stu_class, stu_tel, stu_birthday, stu_sex, stu_lock, stu_firstLogin, stu_extra_1, 
+    stu_extra_2, stu_extra_3, stu_extra_4, stu_extra_5, stu_finalScore, stu_instor_ei, 
+    stu_army_ei, stu_tutor_ei, stu_deptId, stu_email, stu_role
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="extendBaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from studentinfo
+    where stu_userId = #{stuUserid,jdbcType=BIGINT}
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="filterSensitive" />
+    from studentinfo
+    where stu_userId = #{stuUserid,jdbcType=BIGINT}
+  </select>
+  <select id="selectByStuNum" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="filterSensitive" />
+    from studentinfo
+    where stu_num = #{stuNum,jdbcType=BIGINT}
+  </select>
+  <select id="includeSensitiveInfo" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from studentinfo
+    where stu_userId = #{stuUserid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from studentinfo
+    where stu_userId = #{stuUserid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.Student" >
+    insert into studentinfo (stu_userId, stu_username, stu_password, 
+      stu_pre_password, stu_num, stu_name, 
+      stu_grade, stu_class, stu_tel, 
+      stu_birthday, stu_sex, stu_lock, 
+      stu_firstLogin, stu_extra_1, stu_extra_2, 
+      stu_extra_3, stu_extra_4, stu_extra_5, 
+      stu_finalScore, stu_instor_ei, stu_army_ei, 
+      stu_tutor_ei, stu_deptId, stu_email, 
+      stu_role)
+    values (#{stuUserid,jdbcType=BIGINT}, #{stuUsername,jdbcType=VARCHAR}, #{stuPassword,jdbcType=VARCHAR}, 
+      #{stuPrePassword,jdbcType=VARCHAR}, #{stuNum,jdbcType=BIGINT}, #{stuName,jdbcType=VARCHAR}, 
+      #{stuGrade,jdbcType=INTEGER}, #{stuClass,jdbcType=BIGINT}, #{stuTel,jdbcType=VARCHAR}, 
+      #{stuBirthday,jdbcType=TIMESTAMP}, #{stuSex,jdbcType=TINYINT}, #{stuLock,jdbcType=INTEGER}, 
+      #{stuFirstlogin,jdbcType=TINYINT}, #{stuExtra1,jdbcType=VARCHAR}, #{stuExtra2,jdbcType=VARCHAR}, 
+      #{stuExtra3,jdbcType=VARCHAR}, #{stuExtra4,jdbcType=INTEGER}, #{stuExtra5,jdbcType=INTEGER}, 
+      #{stuFinalscore,jdbcType=REAL}, #{stuInstorEi,jdbcType=INTEGER}, #{stuArmyEi,jdbcType=INTEGER}, 
+      #{stuTutorEi,jdbcType=INTEGER}, #{stuDeptid,jdbcType=INTEGER}, #{stuEmail,jdbcType=VARCHAR}, 
+      #{stuRole,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.Student" >
+    insert into studentinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stuUserid != null" >
+        stu_userId,
+      </if>
+      <if test="stuUsername != null" >
+        stu_username,
+      </if>
+      <if test="stuPassword != null" >
+        stu_password,
+      </if>
+      <if test="stuPrePassword != null" >
+        stu_pre_password,
+      </if>
+      <if test="stuNum != null" >
+        stu_num,
+      </if>
+      <if test="stuName != null" >
+        stu_name,
+      </if>
+      <if test="stuGrade != null" >
+        stu_grade,
+      </if>
+      <if test="stuClass != null" >
+        stu_class,
+      </if>
+      <if test="stuTel != null" >
+        stu_tel,
+      </if>
+      <if test="stuBirthday != null" >
+        stu_birthday,
+      </if>
+      <if test="stuSex != null" >
+        stu_sex,
+      </if>
+      <if test="stuLock != null" >
+        stu_lock,
+      </if>
+      <if test="stuFirstlogin != null" >
+        stu_firstLogin,
+      </if>
+      <if test="stuExtra1 != null" >
+        stu_extra_1,
+      </if>
+      <if test="stuExtra2 != null" >
+        stu_extra_2,
+      </if>
+      <if test="stuExtra3 != null" >
+        stu_extra_3,
+      </if>
+      <if test="stuExtra4 != null" >
+        stu_extra_4,
+      </if>
+      <if test="stuExtra5 != null" >
+        stu_extra_5,
+      </if>
+      <if test="stuFinalscore != null" >
+        stu_finalScore,
+      </if>
+      <if test="stuInstorEi != null" >
+        stu_instor_ei,
+      </if>
+      <if test="stuArmyEi != null" >
+        stu_army_ei,
+      </if>
+      <if test="stuTutorEi != null" >
+        stu_tutor_ei,
+      </if>
+      <if test="stuDeptid != null" >
+        stu_deptId,
+      </if>
+      <if test="stuEmail != null" >
+        stu_email,
+      </if>
+      <if test="stuRole != null" >
+        stu_role,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stuUserid != null" >
+        #{stuUserid,jdbcType=BIGINT},
+      </if>
+      <if test="stuUsername != null" >
+        #{stuUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="stuPassword != null" >
+        #{stuPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="stuPrePassword != null" >
+        #{stuPrePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="stuNum != null" >
+        #{stuNum,jdbcType=BIGINT},
+      </if>
+      <if test="stuName != null" >
+        #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuGrade != null" >
+        #{stuGrade,jdbcType=INTEGER},
+      </if>
+      <if test="stuClass != null" >
+        #{stuClass,jdbcType=BIGINT},
+      </if>
+      <if test="stuTel != null" >
+        #{stuTel,jdbcType=VARCHAR},
+      </if>
+      <if test="stuBirthday != null" >
+        #{stuBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stuSex != null" >
+        #{stuSex,jdbcType=TINYINT},
+      </if>
+      <if test="stuLock != null" >
+        #{stuLock,jdbcType=INTEGER},
+      </if>
+      <if test="stuFirstlogin != null" >
+        #{stuFirstlogin,jdbcType=TINYINT},
+      </if>
+      <if test="stuExtra1 != null" >
+        #{stuExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="stuExtra2 != null" >
+        #{stuExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="stuExtra3 != null" >
+        #{stuExtra3,jdbcType=VARCHAR},
+      </if>
+      <if test="stuExtra4 != null" >
+        #{stuExtra4,jdbcType=INTEGER},
+      </if>
+      <if test="stuExtra5 != null" >
+        #{stuExtra5,jdbcType=INTEGER},
+      </if>
+      <if test="stuFinalscore != null" >
+        #{stuFinalscore,jdbcType=REAL},
+      </if>
+      <if test="stuInstorEi != null" >
+        #{stuInstorEi,jdbcType=INTEGER},
+      </if>
+      <if test="stuArmyEi != null" >
+        #{stuArmyEi,jdbcType=INTEGER},
+      </if>
+      <if test="stuTutorEi != null" >
+        #{stuTutorEi,jdbcType=INTEGER},
+      </if>
+      <if test="stuDeptid != null" >
+        #{stuDeptid,jdbcType=INTEGER},
+      </if>
+      <if test="stuEmail != null" >
+        #{stuEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="stuRole != null" >
+        #{stuRole,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.Student" >
+    update studentinfo
+    <set >
+      <if test="stuUsername != null" >
+        stu_username = #{stuUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="stuPassword != null" >
+        stu_password = #{stuPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="stuPrePassword != null" >
+        stu_pre_password = #{stuPrePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="stuNum != null" >
+        stu_num = #{stuNum,jdbcType=BIGINT},
+      </if>
+      <if test="stuName != null" >
+        stu_name = #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuGrade != null" >
+        stu_grade = #{stuGrade,jdbcType=INTEGER},
+      </if>
+      <if test="stuClass != null" >
+        stu_class = #{stuClass,jdbcType=BIGINT},
+      </if>
+      <if test="stuTel != null" >
+        stu_tel = #{stuTel,jdbcType=VARCHAR},
+      </if>
+      <if test="stuBirthday != null" >
+        stu_birthday = #{stuBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stuSex != null" >
+        stu_sex = #{stuSex,jdbcType=TINYINT},
+      </if>
+      <if test="stuLock != null" >
+        stu_lock = #{stuLock,jdbcType=INTEGER},
+      </if>
+      <if test="stuFirstlogin != null" >
+        stu_firstLogin = #{stuFirstlogin,jdbcType=TINYINT},
+      </if>
+      <if test="stuExtra1 != null" >
+        stu_extra_1 = #{stuExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="stuExtra2 != null" >
+        stu_extra_2 = #{stuExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="stuExtra3 != null" >
+        stu_extra_3 = #{stuExtra3,jdbcType=VARCHAR},
+      </if>
+      <if test="stuExtra4 != null" >
+        stu_extra_4 = #{stuExtra4,jdbcType=INTEGER},
+      </if>
+      <if test="stuExtra5 != null" >
+        stu_extra_5 = #{stuExtra5,jdbcType=INTEGER},
+      </if>
+      <if test="stuFinalscore != null" >
+        stu_finalScore = #{stuFinalscore,jdbcType=REAL},
+      </if>
+      <if test="stuInstorEi != null" >
+        stu_instor_ei = #{stuInstorEi,jdbcType=INTEGER},
+      </if>
+      <if test="stuArmyEi != null" >
+        stu_army_ei = #{stuArmyEi,jdbcType=INTEGER},
+      </if>
+      <if test="stuTutorEi != null" >
+        stu_tutor_ei = #{stuTutorEi,jdbcType=INTEGER},
+      </if>
+      <if test="stuDeptid != null" >
+        stu_deptId = #{stuDeptid,jdbcType=BIGINT},
+      </if>
+      <if test="stuEmail != null" >
+        stu_email = #{stuEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="stuRole != null" >
+        stu_role = #{stuRole,jdbcType=INTEGER},
+      </if>
+    </set>
+    where stu_userId = #{stuUserid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.Student" >
+    update studentinfo
+    set stu_username = #{stuUsername,jdbcType=VARCHAR},
+      stu_password = #{stuPassword,jdbcType=VARCHAR},
+      stu_pre_password = #{stuPrePassword,jdbcType=VARCHAR},
+      stu_num = #{stuNum,jdbcType=BIGINT},
+      stu_name = #{stuName,jdbcType=VARCHAR},
+      stu_grade = #{stuGrade,jdbcType=INTEGER},
+      stu_class = #{stuClass,jdbcType=BIGINT},
+      stu_tel = #{stuTel,jdbcType=VARCHAR},
+      stu_birthday = #{stuBirthday,jdbcType=TIMESTAMP},
+      stu_sex = #{stuSex,jdbcType=TINYINT},
+      stu_lock = #{stuLock,jdbcType=INTEGER},
+      stu_firstLogin = #{stuFirstlogin,jdbcType=TINYINT},
+      stu_extra_1 = #{stuExtra1,jdbcType=VARCHAR},
+      stu_extra_2 = #{stuExtra2,jdbcType=VARCHAR},
+      stu_extra_3 = #{stuExtra3,jdbcType=VARCHAR},
+      stu_extra_4 = #{stuExtra4,jdbcType=INTEGER},
+      stu_extra_5 = #{stuExtra5,jdbcType=INTEGER},
+      stu_finalScore = #{stuFinalscore,jdbcType=REAL},
+      stu_instor_ei = #{stuInstorEi,jdbcType=INTEGER},
+      stu_army_ei = #{stuArmyEi,jdbcType=INTEGER},
+      stu_tutor_ei = #{stuTutorEi,jdbcType=INTEGER},
+      stu_deptId = #{stuDeptid,jdbcType=BIGINT},
+      stu_email = #{stuEmail,jdbcType=VARCHAR},
+      stu_role = #{stuRole,jdbcType=INTEGER}
+    where stu_userId = #{stuUserid,jdbcType=BIGINT}
+  </update>
+       <!-- 通过学号或用户名查询用户信息 -->
+  <select id="selectByStuNumOrUsername" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from studentinfo
+    where
+    stu_num = #{stu_num,jdbcType=BIGINT} or
+    stu_username=#{stu_username,jdbcType=VARCHAR}
+  </select>
+  <update id="updateLockByUsername">
+    update studentinfo
+    set stu_lock = #{stu_lock,jdbcType=INTEGER}
+    where stu_username = #{stu_username,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="stuNumIsExists"  resultType="java.lang.Long">
+  	select stu_num from studentinfo 
+  	<where>  
+        <foreach  collection="array" item="id" separator="or" close=")" open="(">   
+            stu_num=#{id}
+        </foreach>  
+    </where>  
+  </select>
+  <select id="getTotalCountByClass" resultType="java.lang.Integer" >
+      select count(*)  from studentinfo where stu_class in (select cl_code  from classinfo where cl_army_instor = #{tcNum,jdbcType=BIGINT})
+  </select>
+  <select id="getStudentInfoByTcNum" resultMap="BaseResultMap" >
+      select  <include refid="filterSensitive" />  from studentinfo where stu_class in (select cl_code  from classinfo where cl_army_instor = #{tcNum,jdbcType=BIGINT})
+  </select>
+  <select id="getStudentInfoByTcNumForShow" resultMap="extendBaseResultMap" >
+      select  <include refid="filterSensitive" />  from studentinfo where stu_class in (select cl_code  from classinfo where cl_army_instor = #{tcNum,jdbcType=BIGINT})
+  	  <if test="stuName != null and stuName !=''" >
+        and stu_name like '%${stuName}%' 
+      </if>
+  </select>
+  <select id="getStudentInfoByTcNumForShowCount" resultType="java.lang.Integer" >
+      select  count(*)  from studentinfo where stu_class in (select cl_code  from classinfo where cl_army_instor = #{tcNum,jdbcType=BIGINT})
+  	  <if test="stuName != null and stuName !=''" >
+        and stu_name like '%${stuName}%' 
+      </if>
+  </select>
+  <!-- 学生信息列表 -->
+  <select id="getAllStuInfo" resultMap="extendBaseResultMap"  >
+    select 
+    <include refid="filterSensitive" />
+    from studentinfo where 1=1 
+     <if test="stuName != null and stuName !=''" >
+        and stu_name like '%${stuName}%' 
+     </if>
+     <if test="stuDeptid != 0 and stuDeptid != null" >
+        and stu_deptId = #{stuDeptid,jdbcType=BIGINT}
+     </if>
+  </select>
+  <!-- 学生个数 -->
+  <select id="getAllStuCount" resultType="java.lang.Integer">
+    select 
+    count(*)
+    from studentinfo where 1=1 
+     <if test="stuName != null and stuName !=''" >
+        and stu_name like '%${stuName}%' 
+     </if>
+     <if test="stuDeptid != 0 and stuDeptid != null" >
+        and stu_deptId = #{stuDeptid,jdbcType=BIGINT}
+     </if>
+  </select>
+   <!-- 批量删除学生信息 -->
+  <delete id="batchDelStuInfo">
+  	 delete from studentinfo
+     where  
+     <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        stu_userId = #{item}  
+    </foreach>
+  </delete>
+  
+   <!-- 删除某个班级的学生 -->
+  <delete id="deleteStuInfoByClCode"  parameterType="java.lang.Long">
+  	 delete from studentinfo
+     where  stu_class = #{clCode,jdbcType=BIGINT}
+  </delete>
+   <!-- 批量删除某个班级下的学生信息 -->
+  <delete id="deleteStuInfoByClCodeList">
+  	 delete from studentinfo
+     where  
+     <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        stu_class = #{item}  
+    </foreach>
+  </delete>
+  <select id="getBatchStuInfo" resultMap="extendBaseResultMap">
+    select 
+    <include refid="filterSensitive" />
+    from studentinfo
+    where 
+    <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        stu_num = #{item}  
+    </foreach>
+  </select>
+</mapper>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.DiaryInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.DiaryInfo" >
+    <id column="diary_id" property="diaryId" jdbcType="INTEGER" />
+    <result column="diary_title" property="diaryTitle" jdbcType="VARCHAR" />
+    <result column="diary_time" property="diaryTime" jdbcType="TIMESTAMP" />
+    <result column="diary_publicer" property="diaryPublicer" jdbcType="INTEGER" />
+    <result column="diary_extra_1" property="diaryExtra1" jdbcType="INTEGER" />
+    <result column="diary_extra_2" property="diaryExtra2" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.rofe.pojo.DiaryInfo" extends="BaseResultMap" >
+    <result column="diary_content" property="diaryContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap extends="ResultMapWithBLOBs" id="extendBaseResultMap" type="com.rofe.pojo.DiaryInfo">
+  	<association property="publicer" javaType="com.rofe.pojo.Student" column="diary_publicer" select="com.rofe.dao.StudentMapper.selectByStuNum"></association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    diary_id, diary_title, diary_time, diary_publicer, diary_extra_1, diary_extra_2
+  </sql>
+  <sql id="Blob_Column_List" >
+    diary_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from diaryinfo
+    where diary_id = #{diaryId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from diaryinfo
+    where diary_id = #{diaryId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.DiaryInfo" >
+    insert into diaryinfo (diary_id, diary_title, diary_time, 
+      diary_publicer, diary_extra_1, diary_extra_2, 
+      diary_content)
+    values (#{diaryId,jdbcType=INTEGER}, #{diaryTitle,jdbcType=VARCHAR}, #{diaryTime,jdbcType=TIMESTAMP}, 
+      #{diaryPublicer,jdbcType=INTEGER}, #{diaryExtra1,jdbcType=INTEGER}, #{diaryExtra2,jdbcType=VARCHAR}, 
+      #{diaryContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.DiaryInfo" >
+    insert into diaryinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="diaryId != null" >
+        diary_id,
+      </if>
+      <if test="diaryTitle != null" >
+        diary_title,
+      </if>
+      <if test="diaryTime != null" >
+        diary_time,
+      </if>
+      <if test="diaryPublicer != null" >
+        diary_publicer,
+      </if>
+      <if test="diaryExtra1 != null" >
+        diary_extra_1,
+      </if>
+      <if test="diaryExtra2 != null" >
+        diary_extra_2,
+      </if>
+      <if test="diaryContent != null" >
+        diary_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="diaryId != null" >
+        #{diaryId,jdbcType=INTEGER},
+      </if>
+      <if test="diaryTitle != null" >
+        #{diaryTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="diaryTime != null" >
+        #{diaryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="diaryPublicer != null" >
+        #{diaryPublicer,jdbcType=INTEGER},
+      </if>
+      <if test="diaryExtra1 != null" >
+        #{diaryExtra1,jdbcType=INTEGER},
+      </if>
+      <if test="diaryExtra2 != null" >
+        #{diaryExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="diaryContent != null" >
+        #{diaryContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.DiaryInfo" >
+    update diaryinfo
+    <set >
+      <if test="diaryTitle != null" >
+        diary_title = #{diaryTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="diaryTime != null" >
+        diary_time = #{diaryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="diaryPublicer != null" >
+        diary_publicer = #{diaryPublicer,jdbcType=INTEGER},
+      </if>
+      <if test="diaryExtra1 != null" >
+        diary_extra_1 = #{diaryExtra1,jdbcType=INTEGER},
+      </if>
+      <if test="diaryExtra2 != null" >
+        diary_extra_2 = #{diaryExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="diaryContent != null" >
+        diary_content = #{diaryContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where diary_id = #{diaryId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.rofe.pojo.DiaryInfo" >
+    update diaryinfo
+    set diary_title = #{diaryTitle,jdbcType=VARCHAR},
+      diary_time = #{diaryTime,jdbcType=TIMESTAMP},
+      diary_publicer = #{diaryPublicer,jdbcType=INTEGER},
+      diary_extra_1 = #{diaryExtra1,jdbcType=INTEGER},
+      diary_extra_2 = #{diaryExtra2,jdbcType=VARCHAR},
+      diary_content = #{diaryContent,jdbcType=LONGVARCHAR}
+    where diary_id = #{diaryId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.DiaryInfo" >
+    update diaryinfo
+    set diary_title = #{diaryTitle,jdbcType=VARCHAR},
+      diary_time = #{diaryTime,jdbcType=TIMESTAMP},
+      diary_publicer = #{diaryPublicer,jdbcType=INTEGER},
+      diary_extra_1 = #{diaryExtra1,jdbcType=INTEGER},
+      diary_extra_2 = #{diaryExtra2,jdbcType=VARCHAR}
+    where diary_id = #{diaryId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 获取指定类型的所有信息-->
+  <select id="getDiaryInfoByNameOrTime" resultMap="extendBaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from diaryinfo d join studentinfo s on d.diary_publicer = s.stu_num 
+    where s.stu_class = #{clCode,jdbcType=INTEGER} 
+    
+    <if test="stuNum != null and stuNum != 0" >
+        and diary_publicer like '%${stuNum}%' 
+     </if>
+     <if test="diaryTime != '' and diaryTime != null" >
+        and diary_time = #{diaryTime,jdbcType=TIMESTAMP}
+     </if>
+     order by diary_publicer
+  </select>
+
+  <select id="getDiaryInfoByNameOrTimeCount" resultType="java.lang.Integer">
+    select 
+   		count(*) 
+    from diaryinfo d join studentinfo s on d.diary_publicer = s.stu_num 
+    where s.stu_class = #{clCode,jdbcType=INTEGER} 
+    
+    <if test="stuNum != null and stuNum != 0" >
+        and diary_publicer like '%${stuNum}%' 
+     </if>
+     <if test="diaryTime != '' and diaryTime != null" >
+        and diary_time = #{diaryTime,jdbcType=TIMESTAMP}
+     </if>
+  </select>
+  
+  <!-- 批量删除日记信息 -->
+  <delete id="batchDelDiaryInfo">
+  	 delete from diaryinfo
+     where  
+     <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        diary_id = #{item}  
+    </foreach>
+  </delete>
+  
+  <!-- 获取学生日记信息-->
+  <select id="getDiaryInfoByStuNum" resultMap="extendBaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from diaryinfo 
+    where diary_publicer = #{stuNum,jdbcType=INTEGER} 
+     <if test="diaryTime != '' and diaryTime != null" >
+        and diary_time = #{diaryTime,jdbcType=TIMESTAMP}
+     </if>
+     order by diary_time
+  </select>
+
+  <select id="getDiaryInfoByStuNumCount" resultType="java.lang.Integer">
+    select 
+   		count(*) 
+    from diaryinfo 
+    where diary_publicer = #{stuNum,jdbcType=INTEGER} 
+     <if test="diaryTime != '' and diaryTime != null" >
+        and diary_time = #{diaryTime,jdbcType=TIMESTAMP}
+     </if>
+  </select>
+  
+   <!-- 删除日记信息 -->
+  <delete id="delDiaryPublicer">
+  	 delete from diaryinfo
+     where  diary_publicer = #{stuNum,jdbcType=INTEGER} 
+  </delete>
+  
+</mapper>

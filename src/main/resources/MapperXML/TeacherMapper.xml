@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.TeacherMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.Teacher" >
+    <id column="tc_userId" property="tcUserid" jdbcType="BIGINT" />
+    <result column="tc_username" property="tcUsername" jdbcType="VARCHAR" />
+    <result column="tc_password" property="tcPassword" jdbcType="VARCHAR" />
+    <result column="tc_pre_password" property="tcPrePassword" jdbcType="VARCHAR" />
+    <result column="tc_num" property="tcNum" jdbcType="BIGINT" />
+    <result column="tc_name" property="tcName" jdbcType="VARCHAR" />
+    <result column="tc_department" property="tcDepartment" jdbcType="BIGINT" />
+    <result column="tc_tel" property="tcTel" jdbcType="VARCHAR" />
+    <result column="tc_birthday" property="tcBirthday" jdbcType="TIMESTAMP" />
+    <result column="tc_sex" property="tcSex" jdbcType="TINYINT" />
+    <result column="tc_email" property="tcEmail" jdbcType="VARCHAR" />
+    <result column="tc_role" property="tcRole" jdbcType="INTEGER" />
+    <result column="tc_lock" property="tcLock" jdbcType="INTEGER" />
+    <result column="tc_firstLogin" property="tcFirstlogin" jdbcType="TINYINT" />
+    <result column="tc_extra_1" property="tcExtra1" jdbcType="VARCHAR" />
+    <result column="tc_extra_2" property="tcExtra2" jdbcType="VARCHAR" />
+    <result column="tc_extra_3" property="tcExtra3" jdbcType="VARCHAR" />
+    <result column="tc_extra_4" property="tcExtra4" jdbcType="VARCHAR" />
+    <result column="tc_extra_5" property="tcExtra5" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="roleInfoMap" type="com.rofe.pojo.Role" >
+    <id column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_extra_1" property="roleExtra1" jdbcType="VARCHAR" />
+     <result column="role_authority" property="roleAuthority" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="deptInfoMap" type="com.rofe.pojo.Department" >
+    <id column="di_id" property="diId" jdbcType="BIGINT" />
+    <result column="di_name" property="diName" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="extendBaseResultMap" type="com.rofe.pojo.Teacher">
+  	<association property="role" javaType="com.rofe.pojo.Role" column="tc_role" select="getRoleInfo"></association>
+  	<association property="dept" javaType="com.rofe.pojo.Department" column="tc_department" select="getDepartmentInfo"></association>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    tc_userId, tc_username, tc_password, tc_pre_password, tc_num, tc_name, tc_department, 
+    tc_tel, tc_birthday, tc_sex, tc_email, tc_role, tc_lock, tc_firstLogin, tc_extra_1, 
+    tc_extra_2, tc_extra_3, tc_extra_4, tc_extra_5
+  </sql>
+  <sql id="filterSensitive">
+    tc_userId, tc_username, tc_num, tc_name, tc_department, 
+    tc_tel, tc_birthday, tc_sex, tc_email, tc_lock, tc_firstLogin
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="extendBaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from teacherinfo
+    where tc_userId = #{tcUserid,jdbcType=BIGINT}
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="filterSensitive" />
+    from teacherinfo
+    where tc_userId = #{tcUserid,jdbcType=BIGINT}
+  </select>
+  <select id="includeSensitiveInfo" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from teacherinfo
+    where tc_userId = #{tcUserid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from teacherinfo
+    where tc_userId = #{tcUserid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.Teacher" >
+    insert into teacherinfo (tc_userId, tc_username, tc_password, 
+      tc_pre_password, tc_num, tc_name, 
+      tc_department, tc_tel, tc_birthday, 
+      tc_sex, tc_email, tc_role, 
+      tc_lock, tc_firstLogin, tc_extra_1, 
+      tc_extra_2, tc_extra_3, tc_extra_4, 
+      tc_extra_5)
+    values (#{tcUserid,jdbcType=BIGINT}, #{tcUsername,jdbcType=VARCHAR}, #{tcPassword,jdbcType=VARCHAR}, 
+      #{tcPrePassword,jdbcType=VARCHAR}, #{tcNum,jdbcType=BIGINT}, #{tcName,jdbcType=VARCHAR}, 
+      #{tcDepartment,jdbcType=BIGINT}, #{tcTel,jdbcType=VARCHAR}, #{tcBirthday,jdbcType=TIMESTAMP}, 
+      #{tcSex,jdbcType=TINYINT}, #{tcEmail,jdbcType=VARCHAR}, #{tcRole,jdbcType=INTEGER}, 
+      #{tcLock,jdbcType=INTEGER}, #{tcFirstlogin,jdbcType=TINYINT}, #{tcExtra1,jdbcType=VARCHAR}, 
+      #{tcExtra2,jdbcType=VARCHAR}, #{tcExtra3,jdbcType=VARCHAR}, #{tcExtra4,jdbcType=VARCHAR}, 
+      #{tcExtra5,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.Teacher" >
+  	<selectKey keyProperty="tcUserid" order="AFTER" resultType="java.lang.Long">
+			SELECT LAST_INSERT_ID()
+	</selectKey>
+    insert into teacherinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tcUserid != null" >
+        tc_userId,
+      </if>
+      <if test="tcUsername != null" >
+        tc_username,
+      </if>
+      <if test="tcPassword != null" >
+        tc_password,
+      </if>
+      <if test="tcPrePassword != null" >
+        tc_pre_password,
+      </if>
+      <if test="tcNum != null" >
+        tc_num,
+      </if>
+      <if test="tcName != null" >
+        tc_name,
+      </if>
+      <if test="tcDepartment != null" >
+        tc_department,
+      </if>
+      <if test="tcTel != null" >
+        tc_tel,
+      </if>
+      <if test="tcBirthday != null" >
+        tc_birthday,
+      </if>
+      <if test="tcSex != null" >
+        tc_sex,
+      </if>
+      <if test="tcEmail != null" >
+        tc_email,
+      </if>
+      <if test="tcRole != null" >
+        tc_role,
+      </if>
+      <if test="tcLock != null" >
+        tc_lock,
+      </if>
+      <if test="tcFirstlogin != null" >
+        tc_firstLogin,
+      </if>
+      <if test="tcExtra1 != null" >
+        tc_extra_1,
+      </if>
+      <if test="tcExtra2 != null" >
+        tc_extra_2,
+      </if>
+      <if test="tcExtra3 != null" >
+        tc_extra_3,
+      </if>
+      <if test="tcExtra4 != null" >
+        tc_extra_4,
+      </if>
+      <if test="tcExtra5 != null" >
+        tc_extra_5,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tcUserid != null" >
+        #{tcUserid,jdbcType=BIGINT},
+      </if>
+      <if test="tcUsername != null" >
+        #{tcUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="tcPassword != null" >
+        #{tcPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="tcPrePassword != null" >
+        #{tcPrePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="tcNum != null" >
+        #{tcNum,jdbcType=BIGINT},
+      </if>
+      <if test="tcName != null" >
+        #{tcName,jdbcType=VARCHAR},
+      </if>
+      <if test="tcDepartment != null" >
+        #{tcDepartment,jdbcType=BIGINT},
+      </if>
+      <if test="tcTel != null" >
+        #{tcTel,jdbcType=VARCHAR},
+      </if>
+      <if test="tcBirthday != null" >
+        #{tcBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tcSex != null" >
+        #{tcSex,jdbcType=TINYINT},
+      </if>
+      <if test="tcEmail != null" >
+        #{tcEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tcRole != null" >
+        #{tcRole,jdbcType=INTEGER},
+      </if>
+      <if test="tcLock != null" >
+        #{tcLock,jdbcType=INTEGER},
+      </if>
+      <if test="tcFirstlogin != null" >
+        #{tcFirstlogin,jdbcType=TINYINT},
+      </if>
+      <if test="tcExtra1 != null" >
+        #{tcExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="tcExtra2 != null" >
+        #{tcExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="tcExtra3 != null" >
+        #{tcExtra3,jdbcType=VARCHAR},
+      </if>
+      <if test="tcExtra4 != null" >
+        #{tcExtra4,jdbcType=VARCHAR},
+      </if>
+      <if test="tcExtra5 != null" >
+        #{tcExtra5,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.Teacher" >
+    update teacherinfo
+    <set >
+      <if test="tcUsername != null" >
+        tc_username = #{tcUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="tcPassword != null" >
+        tc_password = #{tcPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="tcPrePassword != null" >
+        tc_pre_password = #{tcPrePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="tcNum != null" >
+        tc_num = #{tcNum,jdbcType=BIGINT},
+      </if>
+      <if test="tcName != null" >
+        tc_name = #{tcName,jdbcType=VARCHAR},
+      </if>
+      <if test="tcDepartment != null" >
+        tc_department = #{tcDepartment,jdbcType=BIGINT},
+      </if>
+      <if test="tcTel != null" >
+        tc_tel = #{tcTel,jdbcType=VARCHAR},
+      </if>
+      <if test="tcBirthday != null" >
+        tc_birthday = #{tcBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tcSex != null" >
+        tc_sex = #{tcSex,jdbcType=TINYINT},
+      </if>
+      <if test="tcEmail != null" >
+        tc_email = #{tcEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tcRole != null" >
+        tc_role = #{tcRole,jdbcType=INTEGER},
+      </if>
+      <if test="tcLock != null" >
+        tc_lock = #{tcLock,jdbcType=INTEGER},
+      </if>
+      <if test="tcFirstlogin != null" >
+        tc_firstLogin = #{tcFirstlogin,jdbcType=TINYINT},
+      </if>
+      <if test="tcExtra1 != null" >
+        tc_extra_1 = #{tcExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="tcExtra2 != null" >
+        tc_extra_2 = #{tcExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="tcExtra3 != null" >
+        tc_extra_3 = #{tcExtra3,jdbcType=VARCHAR},
+      </if>
+      <if test="tcExtra4 != null" >
+        tc_extra_4 = #{tcExtra4,jdbcType=VARCHAR},
+      </if>
+      <if test="tcExtra5 != null" >
+        tc_extra_5 = #{tcExtra5,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tc_userId = #{tcUserid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.Teacher" >
+    update teacherinfo
+    set tc_username = #{tcUsername,jdbcType=VARCHAR},
+      tc_password = #{tcPassword,jdbcType=VARCHAR},
+      tc_pre_password = #{tcPrePassword,jdbcType=VARCHAR},
+      tc_num = #{tcNum,jdbcType=BIGINT},
+      tc_name = #{tcName,jdbcType=VARCHAR},
+      tc_department = #{tcDepartment,jdbcType=BIGINT},
+      tc_tel = #{tcTel,jdbcType=VARCHAR},
+      tc_birthday = #{tcBirthday,jdbcType=TIMESTAMP},
+      tc_sex = #{tcSex,jdbcType=TINYINT},
+      tc_email = #{tcEmail,jdbcType=VARCHAR},
+      tc_role = #{tcRole,jdbcType=INTEGER},
+      tc_lock = #{tcLock,jdbcType=INTEGER},
+      tc_firstLogin = #{tcFirstlogin,jdbcType=TINYINT},
+      tc_extra_1 = #{tcExtra1,jdbcType=VARCHAR},
+      tc_extra_2 = #{tcExtra2,jdbcType=VARCHAR},
+      tc_extra_3 = #{tcExtra3,jdbcType=VARCHAR},
+      tc_extra_4 = #{tcExtra4,jdbcType=VARCHAR},
+      tc_extra_5 = #{tcExtra5,jdbcType=VARCHAR}
+    where tc_userId = #{tcUserid,jdbcType=BIGINT}
+  </update>
+    <!-- 通过工号或用户名查询用户信息 -->
+  <select id="selectByTcNumOrUsername" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from teacherinfo
+    where 
+	 tc_num = #{tc_num,jdbcType=BIGINT} or
+	 tc_username=#{tc_username,jdbcType=VARCHAR}
+  </select>
+  <update id="updateLockByUsername">
+    update teacherinfo
+    set tc_lock = #{tc_lock,jdbcType=INTEGER}
+    where tc_username = #{tc_username,jdbcType=VARCHAR}
+  </update>
+  <!-- 获取指定类型的角色的记录数 -->
+  <select id="getTotalCountByType" resultType="java.lang.Integer" >
+    select count(tc_userId) from teacherinfo where tc_role = #{roleType,jdbcType=INTEGER}
+     <if test="tcName != null and tcName !=''" >
+        and tc_name like '%${tcName}%' 
+     </if>
+     <if test="tcDepartment != 0 and tcDepartment != null" >
+        and tc_department = #{tcDepartment,jdbcType=BIGINT}
+     </if>
+  </select>
+  
+  <!-- 获取指定类型的所有信息-->
+  <select id="getAllTcInfoByRoleType" resultMap="extendBaseResultMap">
+    select 
+    <include refid="filterSensitive" />
+    from teacherinfo
+    where tc_role = #{roleType,jdbcType=INTEGER}
+    
+    <if test="tcName != null and tcName !=''" >
+        and tc_name like '%${tcName}%' 
+     </if>
+     <if test="tcDepartment != 0 and tcDepartment != null" >
+        and tc_department = #{tcDepartment,jdbcType=BIGINT}
+     </if>
+  </select>
+  
+  <!-- 获取指定类型的过滤后的信息
+  <select id="getFilterTcInfo" resultMap="extendBaseResultMap" >
+    select 
+    <include refid="filterSensitive" />
+    from teacherinfo
+    where tc_role = #{roleType,jdbcType=INTEGER}
+     <if test="tcName != null && tcName !=''" >
+        and tc_name like '%${tcName,jdbcType=VARCHAR}%' 
+     </if>
+     <if test=" != null && tcName !=''" >
+        and tc_department = #{tcDepartment,jdbcType=BIGINT}
+     </if>
+  </select>-->
+   <!-- 获取角色的信息 -->
+   <select id="getRoleInfo" resultMap="roleInfoMap" parameterType="java.lang.Integer" >
+    select 
+    role_id, role_authority, role_name, role_extra_1
+    from roleinfo
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </select>
+  <!-- 获取系别连排的信息 -->
+   <select id="getDepartmentInfo" resultMap="deptInfoMap" parameterType="java.lang.Integer" >
+    select 
+     di_id, di_name, company
+    from departmentinfo
+    where di_id = #{diId,jdbcType=BIGINT}
+  </select>
+  <!-- 批量删除教师信息 -->
+  <delete id="batchDelTcInfo">
+  	 delete from teacherinfo
+     where  
+     <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        tc_userId = #{item}  
+    </foreach>
+  </delete>
+  <!-- 根据系别编号查询系别老师 -->
+  <select id="getTeacherByDiIdAndRole" resultMap="BaseResultMap">
+    select tc_userId,tc_name,tc_role from teacherinfo where tc_department = #{diId,jdbcType=BIGINT} and tc_role = #{tcRole,jdbcType=INTEGER}
+  </select>
+  <select id="getTeacherByDiId" resultMap="BaseResultMap">
+    select tc_userId,tc_name,tc_role from teacherinfo where tc_department = #{diId,jdbcType=BIGINT}
+  </select>
+  
+  <select id="getBatchTcInfo" resultMap="extendBaseResultMap">
+    select 
+    <include refid="filterSensitive" />
+    from teacherinfo
+    where 
+    <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        tc_num = #{item}  
+    </foreach>
+  </select>
+</mapper>

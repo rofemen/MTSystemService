@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.ClassInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.ClassInfo" >
+    <id column="cl_code" property="clCode" jdbcType="BIGINT" />
+    <result column="cl_dpId" property="clDpid" jdbcType="BIGINT" />
+    <result column="cl_grade" property="clGrade" jdbcType="INTEGER" />
+    <result column="cl_name" property="clName" jdbcType="VARCHAR" />
+    <result column="cl_count" property="clCount" jdbcType="INTEGER" />
+    <result column="cl_maxCount" property="clMaxcount" jdbcType="INTEGER" />
+    <result column="cl_rowname" property="clRowname" jdbcType="VARCHAR" />
+    <result column="cl_instor" property="clInstor" jdbcType="BIGINT" />
+    <result column="cl_army_instor" property="clArmyInstor" jdbcType="BIGINT" />
+    <result column="cl_tutor" property="clTutor" jdbcType="BIGINT" />
+    <result column="cl_extra_1" property="clExtra1" jdbcType="VARCHAR" />
+    <result column="cl_extra_2" property="clExtra2" jdbcType="VARCHAR" />
+    <result column="cl_extra_3" property="clExtra3" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="extendsResultMap" type="com.rofe.pojo.ClassInfo" >
+    <association property="tutor" javaType="com.rofe.pojo.Teacher" column="cl_tutor" select="com.rofe.dao.TeacherMapper.selectById"></association>
+  	<association property="armyInstor" javaType="com.rofe.pojo.Teacher" column="cl_army_instor" select="com.rofe.dao.TeacherMapper.selectById"></association>
+  	<association property="instor" javaType="com.rofe.pojo.Teacher" column="cl_instor" select="com.rofe.dao.TeacherMapper.selectById"></association>
+  	<association property="dept" javaType="com.rofe.pojo.Department" column="cl_dpId" select="com.rofe.dao.DepartmentMapper.selectByPrimaryKey"></association>
+  	
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cl_code, cl_dpId, cl_grade, cl_name, cl_count, cl_maxCount, cl_rowname, cl_instor, 
+    cl_army_instor, cl_tutor, cl_extra_1, cl_extra_2, cl_extra_3
+  </sql>
+  <sql id="Filter_Column_List" >
+    cl_code, cl_dpId, cl_grade, cl_name, cl_count, cl_maxCount, cl_rowname, cl_instor, 
+    cl_army_instor, cl_tutor
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="extendsResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from classinfo
+    where cl_code = #{clCode,jdbcType=BIGINT}
+  </select>
+   <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from classinfo
+    where cl_code = #{clCode,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from classinfo
+    where cl_code = #{clCode,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.ClassInfo" >
+    insert into classinfo (cl_code, cl_dpId, cl_grade, 
+      cl_name, cl_count, cl_maxCount, 
+      cl_rowname, cl_instor, cl_army_instor, 
+      cl_tutor, cl_extra_1, cl_extra_2, 
+      cl_extra_3)
+    values (#{clCode,jdbcType=BIGINT}, #{clDpid,jdbcType=BIGINT}, #{clGrade,jdbcType=INTEGER}, 
+      #{clName,jdbcType=VARCHAR}, #{clCount,jdbcType=INTEGER}, #{clMaxcount,jdbcType=INTEGER}, 
+      #{clRowname,jdbcType=VARCHAR}, #{clInstor,jdbcType=BIGINT}, #{clArmyInstor,jdbcType=BIGINT}, 
+      #{clTutor,jdbcType=BIGINT}, #{clExtra1,jdbcType=VARCHAR}, #{clExtra2,jdbcType=VARCHAR}, 
+      #{clExtra3,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.ClassInfo" >
+    insert into classinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="clCode != null" >
+        cl_code,
+      </if>
+      <if test="clDpid != null" >
+        cl_dpId,
+      </if>
+      <if test="clGrade != null" >
+        cl_grade,
+      </if>
+      <if test="clName != null" >
+        cl_name,
+      </if>
+      <if test="clCount != null" >
+        cl_count,
+      </if>
+      <if test="clMaxcount != null" >
+        cl_maxCount,
+      </if>
+      <if test="clRowname != null" >
+        cl_rowname,
+      </if>
+      <if test="clInstor != null" >
+        cl_instor,
+      </if>
+      <if test="clArmyInstor != null" >
+        cl_army_instor,
+      </if>
+      <if test="clTutor != null" >
+        cl_tutor,
+      </if>
+      <if test="clExtra1 != null" >
+        cl_extra_1,
+      </if>
+      <if test="clExtra2 != null" >
+        cl_extra_2,
+      </if>
+      <if test="clExtra3 != null" >
+        cl_extra_3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="clCode != null" >
+        #{clCode,jdbcType=BIGINT},
+      </if>
+      <if test="clDpid != null" >
+        #{clDpid,jdbcType=BIGINT},
+      </if>
+      <if test="clGrade != null" >
+        #{clGrade,jdbcType=INTEGER},
+      </if>
+      <if test="clName != null" >
+        #{clName,jdbcType=VARCHAR},
+      </if>
+      <if test="clCount != null" >
+        #{clCount,jdbcType=INTEGER},
+      </if>
+      <if test="clMaxcount != null" >
+        #{clMaxcount,jdbcType=INTEGER},
+      </if>
+      <if test="clRowname != null" >
+        #{clRowname,jdbcType=VARCHAR},
+      </if>
+      <if test="clInstor != null" >
+        #{clInstor,jdbcType=BIGINT},
+      </if>
+      <if test="clArmyInstor != null" >
+        #{clArmyInstor,jdbcType=BIGINT},
+      </if>
+      <if test="clTutor != null" >
+        #{clTutor,jdbcType=BIGINT},
+      </if>
+      <if test="clExtra1 != null" >
+        #{clExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="clExtra2 != null" >
+        #{clExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="clExtra3 != null" >
+        #{clExtra3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.ClassInfo" >
+    update classinfo
+    <set >
+      <if test="clDpid != null" >
+        cl_dpId = #{clDpid,jdbcType=BIGINT},
+      </if>
+      <if test="clGrade != null" >
+        cl_grade = #{clGrade,jdbcType=INTEGER},
+      </if>
+      <if test="clName != null" >
+        cl_name = #{clName,jdbcType=VARCHAR},
+      </if>
+      <if test="clCount != null" >
+        cl_count = #{clCount,jdbcType=INTEGER},
+      </if>
+      <if test="clMaxcount != null" >
+        cl_maxCount = #{clMaxcount,jdbcType=INTEGER},
+      </if>
+      <if test="clRowname != null" >
+        cl_rowname = #{clRowname,jdbcType=VARCHAR},
+      </if>
+      <if test="clInstor != null" >
+        cl_instor = #{clInstor,jdbcType=BIGINT},
+      </if>
+      <if test="clArmyInstor != null" >
+        cl_army_instor = #{clArmyInstor,jdbcType=BIGINT},
+      </if>
+      <if test="clTutor != null" >
+        cl_tutor = #{clTutor,jdbcType=BIGINT},
+      </if>
+      <if test="clExtra1 != null" >
+        cl_extra_1 = #{clExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="clExtra2 != null" >
+        cl_extra_2 = #{clExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="clExtra3 != null" >
+        cl_extra_3 = #{clExtra3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cl_code = #{clCode,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.ClassInfo" >
+    update classinfo
+    set cl_dpId = #{clDpid,jdbcType=BIGINT},
+      cl_grade = #{clGrade,jdbcType=INTEGER},
+      cl_name = #{clName,jdbcType=VARCHAR},
+      cl_count = #{clCount,jdbcType=INTEGER},
+      cl_maxCount = #{clMaxcount,jdbcType=INTEGER},
+      cl_rowname = #{clRowname,jdbcType=VARCHAR},
+      cl_instor = #{clInstor,jdbcType=BIGINT},
+      cl_army_instor = #{clArmyInstor,jdbcType=BIGINT},
+      cl_tutor = #{clTutor,jdbcType=BIGINT},
+      cl_extra_1 = #{clExtra1,jdbcType=VARCHAR},
+      cl_extra_2 = #{clExtra2,jdbcType=VARCHAR},
+      cl_extra_3 = #{clExtra3,jdbcType=VARCHAR}
+    where cl_code = #{clCode,jdbcType=BIGINT}
+  </update>
+  <!-- 获取所有班级信息-->
+  <select id="getAllClassInfo" resultMap="extendsResultMap">
+    select 
+    <include refid="Filter_Column_List" />
+    from classinfo
+    <if test="clGrade != 0 and clGrade != null" >
+      where cl_grade = #{clGrade,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <select id="getClassInfoCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+    select count(cl_code) from classinfo 
+    <if test="clGrade != 0 and clGrade != null" >
+        where cl_grade = #{clGrade,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <select id="getAllGrade" >
+    select cl_grade from classinfo 
+  </select>
+   <!-- 批量班级信息 -->
+  <delete id="batchDelClInfo">
+  	 delete from classinfo
+     where  
+     <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        cl_code = #{item}  
+    </foreach>
+  </delete>
+    
+   <select id="selectByTcNum" resultMap="extendsResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from classinfo
+    where 
+   	<if test="tcRole == 0" >
+       cl_instor =
+    </if>
+    <if test="tcRole == 1" >
+        cl_army_instor =
+    </if>
+    <if test="tcRole == 2" >
+       cl_tutor = 
+    </if>
+    #{tcNum,jdbcType=BIGINT}
+  </select>
+  <!-- 获取所有班级信息-->
+  <select id="getAllClassInfoForAdd" resultMap="extendsResultMap">
+    select 
+    <include refid="Filter_Column_List" />
+    from classinfo where cl_count &lt; cl_maxCount
+    <if test="clGrade != 0 and clGrade != null" >
+      and cl_grade = #{clGrade,jdbcType=VARCHAR}
+    </if>
+    <if test="clDpId != 0 and clDpId != null" >
+      and cl_dpId = #{clDpId,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="selectByIdAndGrade" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from classinfo
+    where cl_code = #{clCode,jdbcType=BIGINT} and cl_grade = #{clGrade,jdbcType=INTEGER}
+  </select>
+  <update id="updateInstorInfoByTcUserId"  >
+    update classinfo
+    set  cl_instor = null
+    where 
+    <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        cl_instor = #{item}  
+    </foreach>
+  </update>
+  <update id="updateArmyInstorInfoByTcUserId" >
+    update classinfo
+    set  cl_army_instor = null
+    where 
+    <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        cl_army_instor = #{item}  
+    </foreach>
+  </update>
+  <update id="updateTutorInfoByTcUserId" parameterType="java.lang.Integer" >
+    update classinfo
+    set  cl_tutor = null
+    where 
+    <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        cl_tutor = #{item}  
+    </foreach>
+  </update>
+</mapper>

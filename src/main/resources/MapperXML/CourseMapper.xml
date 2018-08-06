@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.CourseMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.Course" >
+    <id column="ci_code" property="ciCode" jdbcType="BIGINT" />
+    <result column="ci_name" property="ciName" jdbcType="VARCHAR" />
+    <result column="ci_extra_1" property="ciExtra1" jdbcType="VARCHAR" />
+    <result column="ci_extra_2" property="ciExtra2" jdbcType="VARCHAR" />
+    <result column="ci_startTime" property="ciStarttime" jdbcType="TIMESTAMP" />
+    <result column="ci_timeLong" property="ciTimelong" jdbcType="INTEGER" />
+    <result column="ci_status" property="ciStatus" jdbcType="INTEGER" />
+    <result column="ci_exam" property="ciExam" jdbcType="INTEGER" />
+    <result column="ci_tcNum" property="ciTcnum" jdbcType="BIGINT" />
+    <result column="ci_type" property="ciType" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.rofe.pojo.Course" extends="BaseResultMap" >
+    <result column="ci_des" property="ciDes" jdbcType="LONGVARCHAR" />
+  </resultMap>
+   <resultMap extends="ResultMapWithBLOBs" id="extendsResultMapWithBLOBs" type="com.rofe.pojo.Course" >
+    <association property="ciTc" javaType="com.rofe.pojo.Teacher" column="ci_tcNum" select="com.rofe.dao.TeacherMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ci_code, ci_name, ci_extra_1, ci_extra_2, ci_startTime, ci_timeLong, ci_status, ci_exam, 
+    ci_tcNum, ci_type
+  </sql>
+  <sql id="Blob_Column_List" >
+    ci_des
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="extendsResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from courseinfo
+    where ci_code = #{ciCode,jdbcType=BIGINT}
+  </select>
+   <select id="selectById" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from courseinfo
+    where ci_code = #{ciCode,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from courseinfo
+    where ci_code = #{ciCode,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.Course" >
+    insert into courseinfo (ci_code, ci_name, ci_extra_1, 
+      ci_extra_2, ci_startTime, ci_timeLong, 
+      ci_status, ci_exam, ci_tcNum, 
+      ci_type, ci_des)
+    values (#{ciCode,jdbcType=BIGINT}, #{ciName,jdbcType=VARCHAR}, #{ciExtra1,jdbcType=VARCHAR}, 
+      #{ciExtra2,jdbcType=VARCHAR}, #{ciStarttime,jdbcType=TIMESTAMP}, #{ciTimelong,jdbcType=INTEGER}, 
+      #{ciStatus,jdbcType=INTEGER}, #{ciExam,jdbcType=INTEGER}, #{ciTcnum,jdbcType=BIGINT}, 
+      #{ciType,jdbcType=INTEGER}, #{ciDes,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.Course" >
+  	<selectKey keyProperty="ciCode" order="AFTER" resultType="java.lang.Long">
+			SELECT LAST_INSERT_ID()
+	</selectKey>
+    insert into courseinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ciCode != null" >
+        ci_code,
+      </if>
+      <if test="ciName != null" >
+        ci_name,
+      </if>
+      <if test="ciExtra1 != null" >
+        ci_extra_1,
+      </if>
+      <if test="ciExtra2 != null" >
+        ci_extra_2,
+      </if>
+      <if test="ciStarttime != null" >
+        ci_startTime,
+      </if>
+      <if test="ciTimelong != null" >
+        ci_timeLong,
+      </if>
+      <if test="ciStatus != null" >
+        ci_status,
+      </if>
+      <if test="ciExam != null" >
+        ci_exam,
+      </if>
+      <if test="ciTcnum != null" >
+        ci_tcNum,
+      </if>
+      <if test="ciType != null" >
+        ci_type,
+      </if>
+      <if test="ciDes != null" >
+        ci_des,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ciCode != null" >
+        #{ciCode,jdbcType=BIGINT},
+      </if>
+      <if test="ciName != null" >
+        #{ciName,jdbcType=VARCHAR},
+      </if>
+      <if test="ciExtra1 != null" >
+        #{ciExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="ciExtra2 != null" >
+        #{ciExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="ciStarttime != null" >
+        #{ciStarttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ciTimelong != null" >
+        #{ciTimelong,jdbcType=INTEGER},
+      </if>
+      <if test="ciStatus != null" >
+        #{ciStatus,jdbcType=INTEGER},
+      </if>
+      <if test="ciExam != null" >
+        #{ciExam,jdbcType=INTEGER},
+      </if>
+      <if test="ciTcnum != null" >
+        #{ciTcnum,jdbcType=BIGINT},
+      </if>
+      <if test="ciType != null" >
+        #{ciType,jdbcType=INTEGER},
+      </if>
+      <if test="ciDes != null" >
+        #{ciDes,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.Course" >
+    update courseinfo
+    <set >
+      <if test="ciName != null" >
+        ci_name = #{ciName,jdbcType=VARCHAR},
+      </if>
+      <if test="ciExtra1 != null" >
+        ci_extra_1 = #{ciExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="ciExtra2 != null" >
+        ci_extra_2 = #{ciExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="ciStarttime != null" >
+        ci_startTime = #{ciStarttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ciTimelong != null" >
+        ci_timeLong = #{ciTimelong,jdbcType=INTEGER},
+      </if>
+      <if test="ciStatus != null" >
+        ci_status = #{ciStatus,jdbcType=INTEGER},
+      </if>
+      <if test="ciExam != null" >
+        ci_exam = #{ciExam,jdbcType=INTEGER},
+      </if>
+      <if test="ciTcnum != null" >
+        ci_tcNum = #{ciTcnum,jdbcType=BIGINT},
+      </if>
+      <if test="ciType != null" >
+        ci_type = #{ciType,jdbcType=INTEGER},
+      </if>
+      <if test="ciDes != null" >
+        ci_des = #{ciDes,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ci_code = #{ciCode,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.rofe.pojo.Course" >
+    update courseinfo
+    set ci_name = #{ciName,jdbcType=VARCHAR},
+      ci_extra_1 = #{ciExtra1,jdbcType=VARCHAR},
+      ci_extra_2 = #{ciExtra2,jdbcType=VARCHAR},
+      ci_startTime = #{ciStarttime,jdbcType=TIMESTAMP},
+      ci_timeLong = #{ciTimelong,jdbcType=INTEGER},
+      ci_status = #{ciStatus,jdbcType=INTEGER},
+      ci_exam = #{ciExam,jdbcType=INTEGER},
+      ci_tcNum = #{ciTcnum,jdbcType=BIGINT},
+      ci_type = #{ciType,jdbcType=INTEGER},
+      ci_des = #{ciDes,jdbcType=LONGVARCHAR}
+    where ci_code = #{ciCode,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.Course" >
+    update courseinfo
+    set ci_name = #{ciName,jdbcType=VARCHAR},
+      ci_extra_1 = #{ciExtra1,jdbcType=VARCHAR},
+      ci_extra_2 = #{ciExtra2,jdbcType=VARCHAR},
+      ci_startTime = #{ciStarttime,jdbcType=TIMESTAMP},
+      ci_timeLong = #{ciTimelong,jdbcType=INTEGER},
+      ci_status = #{ciStatus,jdbcType=INTEGER},
+      ci_exam = #{ciExam,jdbcType=INTEGER},
+      ci_tcNum = #{ciTcnum,jdbcType=BIGINT},
+      ci_type = #{ciType,jdbcType=INTEGER}
+    where ci_code = #{ciCode,jdbcType=BIGINT}
+  </update>
+  <update id="undoCourseApply">
+  	update courseinfo set ci_status = -1 where ci_code = #{ciCode,jdbcType=BIGINT} and ci_status != 1
+  </update>
+  
+  <select id="getCourseInfo" resultMap="extendsResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from courseinfo
+    where ci_status = #{ciStatus,jdbcType=INTEGER} order by ci_code asc
+  </select>
+  <select id="getCourseInfoCount" resultType="java.lang.Integer">
+    select count(*) from courseinfo where ci_status = #{ciStatus,jdbcType=INTEGER}
+  </select>
+  <select id="getTcCouresInfo" resultMap="BaseResultMap">
+    select  
+    <include refid="Base_Column_List" />
+    from courseinfo where (ci_type = 0 or (ci_type = 1 and ci_tcNum = #{ciTcnum,jdbcType=BIGINT})) and ci_status = 1
+  </select>
+  <select id="getTcTecheredCi" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  	from courseinfo 
+  	where ci_code in (select distinct (si_ci_code) from scheduleinfo where si_tc_num = #{ciTcnum,jdbcType=BIGINT})
+  </select>
+</mapper>

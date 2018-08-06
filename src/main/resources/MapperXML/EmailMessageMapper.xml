@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.EmailMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.EmailMessage" >
+    <id column="em_id" property="emId" jdbcType="INTEGER" />
+    <result column="em_time" property="emTime" jdbcType="TIMESTAMP" />
+    <result column="em_sender" property="emSender" jdbcType="INTEGER" />
+    <result column="em_receiver" property="emReceiver" jdbcType="INTEGER" />
+    <result column="em_type" property="emType" jdbcType="VARCHAR" />
+    <result column="em_theme" property="emTheme" jdbcType="VARCHAR" />
+    <result column="em_extra_1" property="emExtra1" jdbcType="VARCHAR" />
+    <result column="em_extra_2" property="emExtra2" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.rofe.pojo.EmailMessage" extends="BaseResultMap" >
+    <result column="em_content" property="emContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    em_id, em_time, em_sender, em_receiver, em_type, em_theme, em_extra_1, em_extra_2
+  </sql>
+  <sql id="Blob_Column_List" >
+    em_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from emailmessage
+    where em_id = #{emId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from emailmessage
+    where em_id = #{emId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.EmailMessage" >
+    insert into emailmessage (em_id, em_time, em_sender, 
+      em_receiver, em_type, em_theme, 
+      em_extra_1, em_extra_2, em_content
+      )
+    values (#{emId,jdbcType=INTEGER}, #{emTime,jdbcType=TIMESTAMP}, #{emSender,jdbcType=INTEGER}, 
+      #{emReceiver,jdbcType=INTEGER}, #{emType,jdbcType=VARCHAR}, #{emTheme,jdbcType=VARCHAR}, 
+      #{emExtra1,jdbcType=VARCHAR}, #{emExtra2,jdbcType=INTEGER}, #{emContent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.EmailMessage" >
+    insert into emailmessage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="emId != null" >
+        em_id,
+      </if>
+      <if test="emTime != null" >
+        em_time,
+      </if>
+      <if test="emSender != null" >
+        em_sender,
+      </if>
+      <if test="emReceiver != null" >
+        em_receiver,
+      </if>
+      <if test="emType != null" >
+        em_type,
+      </if>
+      <if test="emTheme != null" >
+        em_theme,
+      </if>
+      <if test="emExtra1 != null" >
+        em_extra_1,
+      </if>
+      <if test="emExtra2 != null" >
+        em_extra_2,
+      </if>
+      <if test="emContent != null" >
+        em_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="emId != null" >
+        #{emId,jdbcType=INTEGER},
+      </if>
+      <if test="emTime != null" >
+        #{emTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="emSender != null" >
+        #{emSender,jdbcType=INTEGER},
+      </if>
+      <if test="emReceiver != null" >
+        #{emReceiver,jdbcType=INTEGER},
+      </if>
+      <if test="emType != null" >
+        #{emType,jdbcType=VARCHAR},
+      </if>
+      <if test="emTheme != null" >
+        #{emTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="emExtra1 != null" >
+        #{emExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="emExtra2 != null" >
+        #{emExtra2,jdbcType=INTEGER},
+      </if>
+      <if test="emContent != null" >
+        #{emContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.EmailMessage" >
+    update emailmessage
+    <set >
+      <if test="emTime != null" >
+        em_time = #{emTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="emSender != null" >
+        em_sender = #{emSender,jdbcType=INTEGER},
+      </if>
+      <if test="emReceiver != null" >
+        em_receiver = #{emReceiver,jdbcType=INTEGER},
+      </if>
+      <if test="emType != null" >
+        em_type = #{emType,jdbcType=VARCHAR},
+      </if>
+      <if test="emTheme != null" >
+        em_theme = #{emTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="emExtra1 != null" >
+        em_extra_1 = #{emExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="emExtra2 != null" >
+        em_extra_2 = #{emExtra2,jdbcType=INTEGER},
+      </if>
+      <if test="emContent != null" >
+        em_content = #{emContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where em_id = #{emId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.rofe.pojo.EmailMessage" >
+    update emailmessage
+    set em_time = #{emTime,jdbcType=TIMESTAMP},
+      em_sender = #{emSender,jdbcType=INTEGER},
+      em_receiver = #{emReceiver,jdbcType=INTEGER},
+      em_type = #{emType,jdbcType=VARCHAR},
+      em_theme = #{emTheme,jdbcType=VARCHAR},
+      em_extra_1 = #{emExtra1,jdbcType=VARCHAR},
+      em_extra_2 = #{emExtra2,jdbcType=INTEGER},
+      em_content = #{emContent,jdbcType=LONGVARCHAR}
+    where em_id = #{emId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.EmailMessage" >
+    update emailmessage
+    set em_time = #{emTime,jdbcType=TIMESTAMP},
+      em_sender = #{emSender,jdbcType=INTEGER},
+      em_receiver = #{emReceiver,jdbcType=INTEGER},
+      em_type = #{emType,jdbcType=VARCHAR},
+      em_theme = #{emTheme,jdbcType=VARCHAR},
+      em_extra_1 = #{emExtra1,jdbcType=VARCHAR},
+      em_extra_2 = #{emExtra2,jdbcType=INTEGER}
+    where em_id = #{emId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getReceiveMessage" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from emailmessage
+    where em_receiver = #{receer,jdbcType=INTEGER} and em_type like '%${userType}'
+    order by em_time desc
+  </select>
+  
+  <select id="getSendMessage" resultMap="ResultMapWithBLOBs" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from emailmessage
+    where em_sender = #{sender,jdbcType=INTEGER} and em_type like '${userType}%' 
+    order by em_time desc
+  </select>
+  
+   <select id="getSendMessageCount" resultType="java.lang.Integer">
+    select count(*) from emailmessage
+    where em_sender = #{sender,jdbcType=INTEGER} and em_type like '${userType}%' 
+  </select>
+  
+   <select id="getReceiveMessageCount" resultType="java.lang.Integer">
+    select 
+     count(*)
+    from emailmessage
+    where em_receiver = #{receer,jdbcType=INTEGER} and em_type like '%${userType}' 
+  </select>
+  
+   <!-- 批量删除邮件信息 -->
+  <delete id="batchDelEmInfo">
+  	 delete from emailmessage
+     where  
+     <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">  
+        em_id = #{item}  
+    </foreach>
+  </delete>
+</mapper>

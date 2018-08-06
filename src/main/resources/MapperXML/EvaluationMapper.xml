@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.EvaluationMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.Evaluation" >
+    <id column="ei_id" property="eiId" jdbcType="BIGINT" />
+    <result column="ei_publisher" property="eiPublisher" jdbcType="BIGINT" />
+    <result column="ei_target" property="eiTarget" jdbcType="BIGINT" />
+    <result column="ei_time" property="eiTime" jdbcType="TIMESTAMP" />
+    <result column="ei_score" property="eiScore" jdbcType="INTEGER" />
+    <result column="ei_extra_1" property="eiExtra1" jdbcType="VARCHAR" />
+    <result column="ei_extra_2" property="eiExtra2" jdbcType="VARCHAR" />
+    <result column="ei_ci_code" property="eiCiCode" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="ResultMapWithBLOBs" type="com.rofe.pojo.Evaluation" extends="BaseResultMap" >
+    <result column="ei_content" property="eiContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <resultMap extends="ResultMapWithBLOBs" id="extendBaseResultMap" type="com.rofe.pojo.Evaluation">
+  	<association property="publisher" javaType="com.rofe.pojo.Student" column="ei_publisher" select="com.rofe.dao.StudentMapper.selectById"></association>
+  	<association property="target" javaType="com.rofe.pojo.Teacher" column="ei_target" select="com.rofe.dao.TeacherMapper.selectById"></association>
+  	<association property="course" javaType="com.rofe.pojo.Course" column="ei_ci_code" select="com.rofe.dao.CourseMapper.selectById"></association>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ei_id, ei_publisher, ei_target, ei_time, ei_score, ei_extra_1, ei_extra_2, ei_ci_code
+  </sql>
+  <sql id="Blob_Column_List" >
+    ei_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from evaluationinfo
+    where ei_id = #{eiId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from evaluationinfo
+    where ei_id = #{eiId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.Evaluation" >
+    insert into evaluationinfo (ei_id, ei_publisher, ei_target, 
+      ei_time, ei_score, ei_extra_1, 
+      ei_extra_2, ei_ci_code, ei_content
+      )
+    values (#{eiId,jdbcType=BIGINT}, #{eiPublisher,jdbcType=BIGINT}, #{eiTarget,jdbcType=BIGINT}, 
+      #{eiTime,jdbcType=TIMESTAMP}, #{eiScore,jdbcType=INTEGER}, #{eiExtra1,jdbcType=VARCHAR}, 
+      #{eiExtra2,jdbcType=VARCHAR}, #{eiCiCode,jdbcType=INTEGER}, #{eiContent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.Evaluation" >
+    insert into evaluationinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="eiId != null" >
+        ei_id,
+      </if>
+      <if test="eiPublisher != null" >
+        ei_publisher,
+      </if>
+      <if test="eiTarget != null" >
+        ei_target,
+      </if>
+      <if test="eiTime != null" >
+        ei_time,
+      </if>
+      <if test="eiScore != null" >
+        ei_score,
+      </if>
+      <if test="eiExtra1 != null" >
+        ei_extra_1,
+      </if>
+      <if test="eiExtra2 != null" >
+        ei_extra_2,
+      </if>
+      <if test="eiCiCode != null" >
+        ei_ci_code,
+      </if>
+      <if test="eiContent != null" >
+        ei_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="eiId != null" >
+        #{eiId,jdbcType=BIGINT},
+      </if>
+      <if test="eiPublisher != null" >
+        #{eiPublisher,jdbcType=BIGINT},
+      </if>
+      <if test="eiTarget != null" >
+        #{eiTarget,jdbcType=BIGINT},
+      </if>
+      <if test="eiTime != null" >
+        #{eiTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eiScore != null" >
+        #{eiScore,jdbcType=INTEGER},
+      </if>
+      <if test="eiExtra1 != null" >
+        #{eiExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="eiExtra2 != null" >
+        #{eiExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="eiCiCode != null" >
+        #{eiCiCode,jdbcType=INTEGER},
+      </if>
+      <if test="eiContent != null" >
+        #{eiContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.Evaluation" >
+    update evaluationinfo
+    <set >
+      <if test="eiPublisher != null" >
+        ei_publisher = #{eiPublisher,jdbcType=BIGINT},
+      </if>
+      <if test="eiTarget != null" >
+        ei_target = #{eiTarget,jdbcType=BIGINT},
+      </if>
+      <if test="eiTime != null" >
+        ei_time = #{eiTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eiScore != null" >
+        ei_score = #{eiScore,jdbcType=INTEGER},
+      </if>
+      <if test="eiExtra1 != null" >
+        ei_extra_1 = #{eiExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="eiExtra2 != null" >
+        ei_extra_2 = #{eiExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="eiCiCode != null" >
+        ei_ci_code = #{eiCiCode,jdbcType=INTEGER},
+      </if>
+      <if test="eiContent != null" >
+        ei_content = #{eiContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ei_id = #{eiId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.rofe.pojo.Evaluation" >
+    update evaluationinfo
+    set ei_publisher = #{eiPublisher,jdbcType=BIGINT},
+      ei_target = #{eiTarget,jdbcType=BIGINT},
+      ei_time = #{eiTime,jdbcType=TIMESTAMP},
+      ei_score = #{eiScore,jdbcType=INTEGER},
+      ei_extra_1 = #{eiExtra1,jdbcType=VARCHAR},
+      ei_extra_2 = #{eiExtra2,jdbcType=VARCHAR},
+      ei_ci_code = #{eiCiCode,jdbcType=INTEGER},
+      ei_content = #{eiContent,jdbcType=LONGVARCHAR}
+    where ei_id = #{eiId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.Evaluation" >
+    update evaluationinfo
+    set ei_publisher = #{eiPublisher,jdbcType=BIGINT},
+      ei_target = #{eiTarget,jdbcType=BIGINT},
+      ei_time = #{eiTime,jdbcType=TIMESTAMP},
+      ei_score = #{eiScore,jdbcType=INTEGER},
+      ei_extra_1 = #{eiExtra1,jdbcType=VARCHAR},
+      ei_extra_2 = #{eiExtra2,jdbcType=VARCHAR},
+      ei_ci_code = #{eiCiCode,jdbcType=INTEGER}
+    where ei_id = #{eiId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByStuId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from evaluationinfo
+    where ei_publisher = #{eiPublisher,jdbcType=BIGINT}
+  </select>
+  
+   <select id="getEiInfoByTcNum" resultMap="extendBaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from evaluationinfo
+    where ei_target = #{tcNum,jdbcType=BIGINT} and ei_ci_code = #{ciCode,jdbcType=BIGINT}
+  </select>
+  <select id="getEiInfoCountByTcNum" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+    select 
+    count(*)
+    from evaluationinfo
+    where ei_target = #{tcNum,jdbcType=BIGINT} and ei_ci_code = #{ciCode,jdbcType=BIGINT}
+  </select>
+</mapper>

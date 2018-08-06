@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rofe.dao.ShareMapper" >
+  <resultMap id="BaseResultMap" type="com.rofe.pojo.Share" >
+    <id column="share_id" property="shareId" jdbcType="BIGINT" />
+    <result column="share_publisher" property="sharePublisher" jdbcType="BIGINT" />
+    <result column="share_time" property="shareTime" jdbcType="TIMESTAMP" />
+    <result column="share_pic1" property="sharePic1" jdbcType="VARCHAR" />
+    <result column="share_pic2" property="sharePic2" jdbcType="VARCHAR" />
+    <result column="share_pic3" property="sharePic3" jdbcType="VARCHAR" />
+    <result column="share_pic4" property="sharePic4" jdbcType="VARCHAR" />
+    <result column="share_good" property="shareGood" jdbcType="INTEGER" />
+    <result column="share_extra_1" property="shareExtra1" jdbcType="VARCHAR" />
+    <result column="share_extra_2" property="shareExtra2" jdbcType="VARCHAR" />
+    <result column="share_extra_3" property="shareExtra3" jdbcType="INTEGER" />
+    <result column="share_type" property="shareType" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.rofe.pojo.Share" extends="BaseResultMap" >
+    <result column="share_content" property="shareContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap extends="ResultMapWithBLOBs" id="extendBaseResultMap" type="com.rofe.pojo.Share">
+  	<association property="publisher" javaType="com.rofe.pojo.Student" column="share_publisher" select="com.rofe.dao.StudentMapper.selectById"></association>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    share_id, share_publisher, share_time, share_pic1, share_pic2, share_pic3, share_pic4, 
+    share_good, share_extra_1, share_extra_2, share_extra_3, share_type
+  </sql>
+  <sql id="Blob_Column_List" >
+    share_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from shareinfo
+    where share_id = #{shareId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from shareinfo
+    where share_id = #{shareId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rofe.pojo.Share" >
+    insert into shareinfo (share_id, share_publisher, share_time, 
+      share_pic1, share_pic2, share_pic3, 
+      share_pic4, share_good, share_extra_1, 
+      share_extra_2, share_extra_3, share_type, 
+      share_content)
+    values (#{shareId,jdbcType=BIGINT}, #{sharePublisher,jdbcType=BIGINT}, #{shareTime,jdbcType=TIMESTAMP}, 
+      #{sharePic1,jdbcType=VARCHAR}, #{sharePic2,jdbcType=VARCHAR}, #{sharePic3,jdbcType=VARCHAR}, 
+      #{sharePic4,jdbcType=VARCHAR}, #{shareGood,jdbcType=INTEGER}, #{shareExtra1,jdbcType=VARCHAR}, 
+      #{shareExtra2,jdbcType=VARCHAR}, #{shareExtra3,jdbcType=INTEGER}, #{shareType,jdbcType=INTEGER}, 
+      #{shareContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rofe.pojo.Share" >
+    insert into shareinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shareId != null" >
+        share_id,
+      </if>
+      <if test="sharePublisher != null" >
+        share_publisher,
+      </if>
+      <if test="shareTime != null" >
+        share_time,
+      </if>
+      <if test="sharePic1 != null" >
+        share_pic1,
+      </if>
+      <if test="sharePic2 != null" >
+        share_pic2,
+      </if>
+      <if test="sharePic3 != null" >
+        share_pic3,
+      </if>
+      <if test="sharePic4 != null" >
+        share_pic4,
+      </if>
+      <if test="shareGood != null" >
+        share_good,
+      </if>
+      <if test="shareExtra1 != null" >
+        share_extra_1,
+      </if>
+      <if test="shareExtra2 != null" >
+        share_extra_2,
+      </if>
+      <if test="shareExtra3 != null" >
+        share_extra_3,
+      </if>
+      <if test="shareType != null" >
+        share_type,
+      </if>
+      <if test="shareContent != null" >
+        share_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="shareId != null" >
+        #{shareId,jdbcType=BIGINT},
+      </if>
+      <if test="sharePublisher != null" >
+        #{sharePublisher,jdbcType=BIGINT},
+      </if>
+      <if test="shareTime != null" >
+        #{shareTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sharePic1 != null" >
+        #{sharePic1,jdbcType=VARCHAR},
+      </if>
+      <if test="sharePic2 != null" >
+        #{sharePic2,jdbcType=VARCHAR},
+      </if>
+      <if test="sharePic3 != null" >
+        #{sharePic3,jdbcType=VARCHAR},
+      </if>
+      <if test="sharePic4 != null" >
+        #{sharePic4,jdbcType=VARCHAR},
+      </if>
+      <if test="shareGood != null" >
+        #{shareGood,jdbcType=INTEGER},
+      </if>
+      <if test="shareExtra1 != null" >
+        #{shareExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="shareExtra2 != null" >
+        #{shareExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="shareExtra3 != null" >
+        #{shareExtra3,jdbcType=INTEGER},
+      </if>
+      <if test="shareType != null" >
+        #{shareType,jdbcType=INTEGER},
+      </if>
+      <if test="shareContent != null" >
+        #{shareContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rofe.pojo.Share" >
+    update shareinfo
+    <set >
+      <if test="sharePublisher != null" >
+        share_publisher = #{sharePublisher,jdbcType=BIGINT},
+      </if>
+      <if test="shareTime != null" >
+        share_time = #{shareTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sharePic1 != null" >
+        share_pic1 = #{sharePic1,jdbcType=VARCHAR},
+      </if>
+      <if test="sharePic2 != null" >
+        share_pic2 = #{sharePic2,jdbcType=VARCHAR},
+      </if>
+      <if test="sharePic3 != null" >
+        share_pic3 = #{sharePic3,jdbcType=VARCHAR},
+      </if>
+      <if test="sharePic4 != null" >
+        share_pic4 = #{sharePic4,jdbcType=VARCHAR},
+      </if>
+      <if test="shareGood != null" >
+        share_good = #{shareGood,jdbcType=INTEGER},
+      </if>
+      <if test="shareExtra1 != null" >
+        share_extra_1 = #{shareExtra1,jdbcType=VARCHAR},
+      </if>
+      <if test="shareExtra2 != null" >
+        share_extra_2 = #{shareExtra2,jdbcType=VARCHAR},
+      </if>
+      <if test="shareExtra3 != null" >
+        share_extra_3 = #{shareExtra3,jdbcType=INTEGER},
+      </if>
+      <if test="shareType != null" >
+        share_type = #{shareType,jdbcType=INTEGER},
+      </if>
+      <if test="shareContent != null" >
+        share_content = #{shareContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where share_id = #{shareId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.rofe.pojo.Share" >
+    update shareinfo
+    set share_publisher = #{sharePublisher,jdbcType=BIGINT},
+      share_time = #{shareTime,jdbcType=TIMESTAMP},
+      share_pic1 = #{sharePic1,jdbcType=VARCHAR},
+      share_pic2 = #{sharePic2,jdbcType=VARCHAR},
+      share_pic3 = #{sharePic3,jdbcType=VARCHAR},
+      share_pic4 = #{sharePic4,jdbcType=VARCHAR},
+      share_good = #{shareGood,jdbcType=INTEGER},
+      share_extra_1 = #{shareExtra1,jdbcType=VARCHAR},
+      share_extra_2 = #{shareExtra2,jdbcType=VARCHAR},
+      share_extra_3 = #{shareExtra3,jdbcType=INTEGER},
+      share_type = #{shareType,jdbcType=INTEGER},
+      share_content = #{shareContent,jdbcType=LONGVARCHAR}
+    where share_id = #{shareId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rofe.pojo.Share" >
+    update shareinfo
+    set share_publisher = #{sharePublisher,jdbcType=BIGINT},
+      share_time = #{shareTime,jdbcType=TIMESTAMP},
+      share_pic1 = #{sharePic1,jdbcType=VARCHAR},
+      share_pic2 = #{sharePic2,jdbcType=VARCHAR},
+      share_pic3 = #{sharePic3,jdbcType=VARCHAR},
+      share_pic4 = #{sharePic4,jdbcType=VARCHAR},
+      share_good = #{shareGood,jdbcType=INTEGER},
+      share_extra_1 = #{shareExtra1,jdbcType=VARCHAR},
+      share_extra_2 = #{shareExtra2,jdbcType=VARCHAR},
+      share_extra_3 = #{shareExtra3,jdbcType=INTEGER},
+      share_type = #{shareType,jdbcType=INTEGER}
+    where share_id = #{shareId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 获取所有的数量 -->
+   <select id="getAllShareCount" resultType="java.lang.Integer">
+    select count(*) from shareinfo
+  </select>
+  
+  <select id="getSharesInfo" resultMap="extendBaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from shareinfo order by share_time desc
+  </select>
+  <delete id="deleteByPublisher" parameterType="java.lang.Long" >
+    delete from shareinfo
+    where share_publisher = #{stuUserid,jdbcType=BIGINT}
+  </delete>
+</mapper>
